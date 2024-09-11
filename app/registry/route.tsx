@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 const data = {
-    name: "MODEL",
+    name: "REGISTRY",
     email: "john.doe@example.com",
     age: 30,
     gender: "male",
@@ -11,6 +11,6 @@ const data = {
     state: "CA",
 }
 
-export const GET = async () => {
+export const POST = async () => {
     return new NextResponse(JSON.stringify(data), { status: 200 });
 };

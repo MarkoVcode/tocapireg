@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 const data = {
-    name: "MODEL",
+    name: "MODELS",
     email: "john.doe@example.com",
     age: 30,
     gender: "male",
