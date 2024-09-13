@@ -1,9 +1,9 @@
 import { DynamoDBClient, ScanCommand } from "@aws-sdk/client-dynamodb";
 import { DeleteCommand, DynamoDBDocumentClient, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
-import { unmarshall } from "@aws-sdk/util-dynamodb";
+import { unmarshall } from "@aws-sdk/util-dynamodb";    
+import { getTableName } from "./env";
 
-//const TABLE_NAME = 'tocModelsRegistry';
-const TABLE_NAME = 'tocModelsRegistry-development';
+const TABLE_NAME = getTableName();
 
 const client = new DynamoDBClient({ region: "us-east-1" });
 const docClient = DynamoDBDocumentClient.from(client);
