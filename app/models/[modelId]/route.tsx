@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { queryItemByIndex } from "@/lib/db";
 
-export const GET = async (request: Request, context: { params: any }) => {
+export const GET = async (request: Request, context: { params: { modelId: string } }) => {
     const modelId = context.params.modelId;
     const data = await queryItemByIndex(
         'modelId',

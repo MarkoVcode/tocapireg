@@ -18,7 +18,7 @@ export const scanTable = async () => {
     return unmarshalled;
 };
 
-export const queryItemByIndex = async (indexName: string, keyConditionExpression: string, expressionAttributeValues: Record<string, any>) => {
+export const queryItemByIndex = async (indexName: string, keyConditionExpression: string, expressionAttributeValues: Record<string, string>) => {
     const params = {
         TableName: TABLE_NAME,
         IndexName: indexName, //'modelId',
@@ -44,6 +44,7 @@ export const queryItemsByServiceUrl = async (serviceUrl: string) => {
     return response.Items;
 };
 
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */   
 export const addItem = async (modelItem: any) => {
     const params = { 
         TableName: TABLE_NAME,

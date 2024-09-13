@@ -6,13 +6,13 @@ export const POST = async (request: Request) => {
     const modelsRepoUrl = body.modelsRepoUrl;
     const response = await fetch(modelsRepoUrl + '/models');
     const models = await response.json();
-    var modelsListNew = [];
+    const modelsListNew = [];
     for (const model of models) {
         await addItem(model);
         modelsListNew.push(model.id);
     }
     const modelsx = await queryItemsByServiceUrl(modelsRepoUrl);
-    var deletedCounter = 0;
+    let deletedCounter = 0;
     if (modelsx) {
         for (const modelx of modelsx) {
             if (!modelsListNew.includes(modelx.id)) {
