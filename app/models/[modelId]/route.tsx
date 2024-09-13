@@ -1,16 +1,15 @@
 import { NextResponse } from "next/server";
+import { queryItemByIndex } from "@/lib/db";
 
-const data = {
-    name: "MODEL",
-    email: "john.doe@example.com",
-    age: 30,
-    gender: "male",
-    phone: "1234567890",
-    address: "123 Main St, Anytown, USA",
-    city: "Anytown",
-    state: "CA",
-}
-
-export const GET = async () => {
-    return new NextResponse(JSON.stringify(data), { status: 200 });
+export const GET = async (request: Request, context: { params: any }) => {
+    const modelId = context.params.modelId;
+    const data = await queryItemByIndex(
+        'modelId',
+        'id = :modelId',
+        { ':modelId': modelId });
+    return new NextResponse(JSON.stringify(data), { 
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+    });
 };
+

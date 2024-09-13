@@ -1,0 +1,45 @@
+{
+    "AttributeDefinitions": [
+        {
+            "AttributeName": "id",
+            "AttributeType": "S"
+        },
+        {
+            "AttributeName": "serviceUrl",
+            "AttributeType": "S"
+        }
+    ],
+    "TableName": "tocModelsRegistry-development",
+    "KeySchema": [
+        {
+            "AttributeName": "serviceUrl",
+            "KeyType": "HASH"
+        },
+        {
+            "AttributeName": "id",
+            "KeyType": "RANGE"
+        }
+    ],
+    "ProvisionedThroughput": {
+        "ReadCapacityUnits": 1,
+        "WriteCapacityUnits": 1
+    },
+    "GlobalSecondaryIndexes": [
+        {
+            "IndexName": "modelId",
+            "KeySchema": [
+                {
+                    "AttributeName": "id",
+                    "KeyType": "HASH"
+                }
+            ],
+            "Projection": {
+                "ProjectionType": "ALL"
+            },
+            "ProvisionedThroughput": {
+                "ReadCapacityUnits": 1,
+                "WriteCapacityUnits": 1
+            }
+        }
+    ]
+}
