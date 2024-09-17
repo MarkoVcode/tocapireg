@@ -1,0 +1,34 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-tocapireg-dev-63af0-authRole",
+      "UnauthRoleArn": "arn:aws:iam::854760617041:role/amplify-tocapireg-dev-63af0-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::854760617041:role/amplify-tocapireg-dev-63af0-authRole",
+      "Region": "eu-west-2",
+      "DeploymentBucketName": "amplify-tocapireg-dev-63af0-deployment",
+      "UnauthRoleName": "amplify-tocapireg-dev-63af0-unauthRole",
+      "StackName": "amplify-tocapireg-dev-63af0",
+      "StackId": "arn:aws:cloudformation:eu-west-2:854760617041:stack/amplify-tocapireg-dev-63af0/3660f610-74ed-11ef-ab41-068af8b83931",
+      "AmplifyAppId": "d1bh08te3m3ivv"
+    },
+    "categories": {
+      "storage": {
+        "tocModelsRegistrydevelopment": {
+          "tableName": "tocModelsRegistry-development",
+          "region": "eu-west-2",
+          "arn": "arn:aws:dynamodb:eu-west-2:854760617041:table/tocModelsRegistry-development",
+          "partitionKeyName": "serviceUrl",
+          "partitionKeyType": "S",
+          "sortKeyName": "id",
+          "sortKeyType": "S"
+        }
+      },
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d1bh08te3m3ivv",
+          "type": "cicd"
+        }
+      }
+    }
+  }
+}
