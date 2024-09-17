@@ -1,11 +1,17 @@
 import { DynamoDBClient, ScanCommand } from "@aws-sdk/client-dynamodb";
 import { DeleteCommand, DynamoDBDocumentClient, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
-import { unmarshall } from "@aws-sdk/util-dynamodb";    
+import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { getTableName } from "./env";
 
 const TABLE_NAME = getTableName();
 
-const client = new DynamoDBClient({ region: "us-east-1" });
+const client = new DynamoDBClient({
+    region: "us-east-1",
+    credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
+    }
+});
 const docClient = DynamoDBDocumentClient.from(client);
 
 export const scanTable = async () => {
@@ -44,9 +50,9 @@ export const queryItemsByServiceUrl = async (serviceUrl: string) => {
     return response.Items;
 };
 
-/* eslint-disable-next-line @typescript-eslint/no-explicit-any */   
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 export const addItem = async (modelItem: any) => {
-    const params = { 
+    const params = {
         TableName: TABLE_NAME,
         Item: {
             serviceUrl: modelItem.serviceUrl,

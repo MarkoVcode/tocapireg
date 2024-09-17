@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { VERSION, AWS_BRANCH, isProduction, AWS_ENDPOINT } from "@/lib/env";
 
 export const GET = async () => {
-    const responseBody = { version: VERSION, branch: AWS_BRANCH, production: isProduction(), endpoint: AWS_ENDPOINT };
+    const responseBody = { version: VERSION, branch: AWS_BRANCH, production: isProduction(), endpoint: AWS_ENDPOINT, credTest: process.env.AWS_ACCESS_KEY_ID || '', };
     return new NextResponse(JSON.stringify(responseBody), { 
         status: 200,
         headers: { 'Content-Type': 'application/json' }
