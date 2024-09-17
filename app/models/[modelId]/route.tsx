@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { queryItemByIndex, scanTable } from "@/lib/db";
+import { scanTable } from "@/lib/db";
 
 export const GET = async (request: Request, context: { params: { modelId: string } }) => {
 
