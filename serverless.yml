@@ -1,0 +1,75 @@
+service: tocapireg
+frameworkVersion: '4'
+
+org: softcognito
+app: tocapireg
+
+custom:
+  tableName: 'tocmodels-registry-${sls:stage}'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:Query 
+          Resource:
+            - { "Fn::GetAtt": ["RegistryTable", "Arn" ] }
+            - { "Fn::Join": [ "/", [ 
+                { "Fn::GetAtt": ["RegistryTable", "Arn" ] }, "index", "modelId" 
+              ]]}
+  environment:
+    REGISTRY_TABLE: ${self:custom.tableName}
+    DEPLOYMENT: infrastructure
+
+functions:
+  registry:
+    handler: index.handler
+    url:
+      cors:
+        allowedOrigins:
+          - https://url1.com
+          - https://url2.com
+        allowedHeaders:
+          - Content-Type
+          - Authorization
+        allowedMethods:
+          - GET
+        allowCredentials: true
+        exposedResponseHeaders:
+          - Special-Response-Header
+        maxAge: 6000 # In seconds
+
+resources:
+  Resources:
+    RegistryTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: serviceUrl
+            AttributeType: S
+        KeySchema:
+          - AttributeName: serviceUrl
+            KeyType: HASH
+          - AttributeName: id
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:custom.tableName}
+        GlobalSecondaryIndexes:
+          - IndexName: modelId
+            KeySchema:
+              - AttributeName: id
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
