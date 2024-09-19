@@ -1,8 +1,7 @@
-service: tocapireg
-frameworkVersion: '4'
-
 org: softcognito
 app: tocapireg
+service: tocapireg
+frameworkVersion: '4'
 
 custom:
   tableName: 'tocmodels-registry-${sls:stage}'
