@@ -1,16 +1,27 @@
 const env = require('./lib/env');
 env.processEnvironment();
 const express = require("express");
+const cors = require('cors');
 const serverless = require("serverless-http");
 const dblib = require('./lib/db');
 
 const app = express();
 
+const corsOptions = {
+  origin: ['http://localhost:3000', 'https://development.thingoncloud.com', 'https://www.thingoncloud.com'], //(https://your-client-app.com)
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.get("/models/:modelId", async function (req, res) {
   const data = await dblib.queryItemByIndex('modelId', 'id = :modelId', { ':modelId': req.params.modelId });
-  res.json(data);
+  if (data) {
+    res.json(data);
+  } else {
+    res.status(404).json({ error: 'Model not found' });
+  }
 });
 
 app.get("/models", async function (req, res) {
@@ -43,8 +54,12 @@ app.post("/registry", async function (req, res) {
   const response = await fetch(modelsRepoUrl + '/models');
   const models = await response.json();
   const modelsListNew = [];
+  let updatedCounter = 0;
   for (const model of models) {
-    await dblib.addItem(model); 
+    const added = await dblib.addItem(model); 
+    if (added) {
+      updatedCounter++;
+    }
     modelsListNew.push(model.id);
   }
   const modelsx = await dblib.queryItemsByServiceUrl(modelsRepoUrl);
@@ -57,7 +72,17 @@ app.post("/registry", async function (req, res) {
       }
     }
   }
-  const responseBody = { modelsUpdated: models.length, modelsDeleted: deletedCounter, status: 'success' };
+  const modelsAdded = parseInt(models.length) - parseInt(updatedCounter);
+  const responseBody = { modelsAdded: modelsAdded, modelsUpdated: updatedCounter, modelsDeleted: deletedCounter, status: 'success' };
+  res.json(responseBody);
+});
+
+app.delete("/registry", async function (req, res) {
+  const { modelsRepoUrl } = req.body;
+  const modelsDeleted = await dblib.deleteItemsByServiceUrl(modelsRepoUrl);
+  const responseBody = { 
+    modelsDeleted: modelsDeleted,
+    status: 'success' };
   res.json(responseBody);
 });
 
