@@ -18,14 +18,20 @@ app.use(express.json());
 app.get("/models/:modelId", async function (req, res) {
   const data = await dblib.queryItemByIndex('modelId', 'id = :modelId', { ':modelId': req.params.modelId });
   if (data) {
-    res.json(data);
-  } else {
-    res.status(404).json({ error: 'Model not found' });
+    if (data.published) {
+      res.json(data);
+      return;
+    }
   }
+  res.status(404).json({ error: 'Model not found' });
 });
 
 app.get("/models", async function (req, res) {
-  const data = await dblib.scanTable();
+  let published = true;
+  if (req.query.published === 'false') {
+    published = false;
+  }
+  const data = await dblib.fetchPublishedModels(published);
   res.json(data);
 });
 
@@ -45,6 +51,26 @@ app.get("/registry", async function (req, res) {
   res.json(data);
 });
 
+// {
+//   "modelsRepoUrls": [
+//       "https://bvu4yujc2fonmgmjdco6s6aknq0yjjxq.lambda-url.eu-west-2.on.aws",
+//       "https://bvu4yujc2fonmgmjdco6s6aknq0yjjxq.lambda-url.eu-west-2.on.aws",
+//       "https://bvu4yujc2fonmgmjdco6s6aknq0yjjxq.lambda-url.eu-west-2.on.aws"
+//   ]
+// }
+
+app.post("/myregistry", async function (req, res) {
+  const { modelsRepoUrls } = req.body;
+  const models = [];
+  for (const modelsRepoUrl of modelsRepoUrls) {
+    const modelsx = await dblib.queryItemsByServiceUrl(modelsRepoUrl);
+    for (const modelx of modelsx) {
+      models.push(modelx);
+    }
+  }
+  res.json(models);
+});
+
 // Add models to Registry
 app.post("/registry", async function (req, res) {
   const { modelsRepoUrl } = req.body;
@@ -56,7 +82,7 @@ app.post("/registry", async function (req, res) {
   const modelsListNew = [];
   let updatedCounter = 0;
   for (const model of models) {
-    const added = await dblib.addItem(model); 
+    const added = await dblib.addItem(model);
     if (added) {
       updatedCounter++;
     }
@@ -80,9 +106,10 @@ app.post("/registry", async function (req, res) {
 app.delete("/registry", async function (req, res) {
   const { modelsRepoUrl } = req.body;
   const modelsDeleted = await dblib.deleteItemsByServiceUrl(modelsRepoUrl);
-  const responseBody = { 
+  const responseBody = {
     modelsDeleted: modelsDeleted,
-    status: 'success' };
+    status: 'success'
+  };
   res.json(responseBody);
 });
 

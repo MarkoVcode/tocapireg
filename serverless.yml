@@ -57,7 +57,7 @@ resources:
           - AttributeName: id
             AttributeType: S
           - AttributeName: serviceUrl
-            AttributeType: S
+            AttributeType: S 
         KeySchema:
           - AttributeName: serviceUrl
             KeyType: HASH
@@ -72,3 +72,6 @@ resources:
                 KeyType: HASH
             Projection:
               ProjectionType: ALL
+
+
+#aws dynamodb describe-table --region us-east-1 --table-name tocmodels-registry-dev
